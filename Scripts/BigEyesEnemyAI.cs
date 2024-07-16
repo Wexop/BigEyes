@@ -64,10 +64,13 @@ public class BigEyesEnemyAI: EnemyAI
             SetAnimation();
             ChangeEyesMaterial(currentBehaviourStateIndex == 2);
             isSleeping = currentBehaviourStateIndex == 0;
-            if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
-            {
-                GameNetworkManager.Instance.localPlayerController.IncreaseFearLevelOverTime(8f);
-            }
+
+        }
+        
+        if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position + Vector3.up * 0.25f, 80f, 25))
+        {
+            if (currentBehaviourStateIndex != 0)
+                GameNetworkManager.Instance.localPlayerController.IncreaseFearLevelOverTime(0.8f);
         }
         
         
