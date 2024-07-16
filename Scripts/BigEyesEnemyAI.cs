@@ -11,6 +11,9 @@ public class BigEyesEnemyAI: EnemyAI
     public Material normalMaterial;
     public Material angryMaterial;
 
+    public AudioClip wakeUpSound;
+    public AudioClip angrySound;
+
     public GameObject[] eyes;
     public GameObject normalLight;
     public GameObject angryLight;
@@ -40,6 +43,7 @@ public class BigEyesEnemyAI: EnemyAI
     {
         base.Start();
         ChangeEyesMaterial(false);
+        SetAnimation();
         foreach (var o in eyes)
         {
             _renders.Add(o.GetComponent<Renderer>());
@@ -59,6 +63,7 @@ public class BigEyesEnemyAI: EnemyAI
             lastBehaviorState = currentBehaviourStateIndex;
             SetAnimation();
             ChangeEyesMaterial(currentBehaviourStateIndex == 2);
+            isSleeping = currentBehaviourStateIndex == 0;
             if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
             {
                 GameNetworkManager.Instance.localPlayerController.IncreaseFearLevelOverTime(8f);
@@ -81,7 +86,6 @@ public class BigEyesEnemyAI: EnemyAI
         {
             case 0:
             {
-                SetAnimation();
                 agent.speed = 0f;
                 isSleeping = true;
                 openDoorSpeedMultiplier = 0f;
@@ -95,7 +99,6 @@ public class BigEyesEnemyAI: EnemyAI
             }
             case 1:
             {
-                SetAnimation();
                 agent.speed = 5f;
                 TargetClosestPlayer(requireLineOfSight: true);
                 openDoorSpeedMultiplier = 1.5f;
@@ -122,10 +125,9 @@ public class BigEyesEnemyAI: EnemyAI
             }
             case 2:
             {
-                SetAnimation();
-                agent.speed = 10f;
+                agent.speed = 15f;
                 openDoorSpeedMultiplier = 0.8f;
-                TargetClosestPlayer(requireLineOfSight: true);
+                TargetClosestPlayer(requireLineOfSight: true, viewWidth: 120f);
                 if (targetPlayer != null && PlayerIsTargetable(targetPlayer))
                 {
                     SetMovingTowardsTargetPlayer(targetPlayer);
@@ -150,18 +152,23 @@ public class BigEyesEnemyAI: EnemyAI
         {
             case 0:
             {
+                creatureVoice.clip = null ;
                 creatureAnimator.SetBool(Attack, false);
                 creatureAnimator.SetBool(Sleep, true);
                 break;
             }
             case 1:
             {
+                creatureVoice.clip = wakeUpSound ;
+                creatureVoice.Play();
                 creatureAnimator.SetBool(Attack, false);
                 creatureAnimator.SetBool(Sleep, false);
                 break;
             }
             case 2:
             {
+                creatureVoice.clip = angrySound ;
+                creatureVoice.Play();
                 creatureAnimator.SetBool(Attack, true);
                 creatureAnimator.SetBool(Sleep, false);
                 break;
@@ -172,7 +179,12 @@ public class BigEyesEnemyAI: EnemyAI
     public override void OnCollideWithPlayer(Collider other)
     {
         if(isSleeping) return;
-        MeetsStandardPlayerCollisionConditions(other).KillPlayer(Vector3.forward * 3f);
+        var player = MeetsStandardPlayerCollisionConditions(other, false, true);
+        if (player != null)
+        {
+            player.KillPlayer(Vector3.forward * 3f);
+        }
+        
         PlayAnimationOfCurrentState();
     }
 }
