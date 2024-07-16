@@ -20,6 +20,7 @@ public class BigEyesEnemyAI: EnemyAI
 
     private float sleepingTimer = 15f;
     private float searchTimer = 15f;
+    private float attackPlayerTimer = 2f;
     public bool isSleeping;
     public float aiInterval;
 
@@ -48,6 +49,8 @@ public class BigEyesEnemyAI: EnemyAI
         {
             _renders.Add(o.GetComponent<Renderer>());
         }
+
+        agent.angularSpeed = 400f;
     }
 
     public override void Update()
@@ -57,6 +60,8 @@ public class BigEyesEnemyAI: EnemyAI
         aiInterval -= Time.deltaTime;
         if(isSleeping)sleepingTimer -= Time.deltaTime;
         else searchTimer -= Time.deltaTime;
+        
+        attackPlayerTimer -= Time.deltaTime;
 
         if (lastBehaviorState != currentBehaviourStateIndex)
         {
@@ -67,10 +72,10 @@ public class BigEyesEnemyAI: EnemyAI
 
         }
         
-        if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position + Vector3.up * 0.25f, 80f, 25))
+        if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position + Vector3.up * 0.25f, 100f, 25))
         {
             if (currentBehaviourStateIndex == 2)
-                GameNetworkManager.Instance.localPlayerController.IncreaseFearLevelOverTime(0.8f);
+                GameNetworkManager.Instance.localPlayerController.JumpToFearLevel(0.8f);
         }
         
         
@@ -103,6 +108,7 @@ public class BigEyesEnemyAI: EnemyAI
             case 1:
             {
                 agent.speed = 5f;
+                agent.acceleration = 10f;
                 TargetClosestPlayer(requireLineOfSight: true);
                 openDoorSpeedMultiplier = 1.5f;
                 if (searchTimer <= 0)
@@ -120,6 +126,8 @@ public class BigEyesEnemyAI: EnemyAI
                     StartSearch(ChooseFarthestNodeFromPosition(transform.position, true).position, aiSearchRoutine);
                 }else if (PlayerIsTargetable(targetPlayer))
                 {
+                    attackPlayerTimer = 4f;
+                    searchTimer += 3f;
                     StopSearch(currentSearch);
                     SwitchToBehaviourClientRpc(2);
                 }
@@ -128,9 +136,15 @@ public class BigEyesEnemyAI: EnemyAI
             }
             case 2:
             {
-                agent.speed = 15f;
+                agent.speed = 10f;
+                agent.acceleration = 13f;
                 openDoorSpeedMultiplier = 0.8f;
-                TargetClosestPlayer(requireLineOfSight: true, viewWidth: 150f);
+                if (attackPlayerTimer <= 0)
+                {
+                    TargetClosestPlayer(requireLineOfSight: true, viewWidth: 150f);
+                    attackPlayerTimer = 3f;
+                    searchTimer += 3f;
+                }
                 if (targetPlayer != null && PlayerIsTargetable(targetPlayer))
                 {
                     SetMovingTowardsTargetPlayer(targetPlayer);
