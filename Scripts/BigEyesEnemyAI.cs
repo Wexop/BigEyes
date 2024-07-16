@@ -69,7 +69,7 @@ public class BigEyesEnemyAI: EnemyAI
         
         if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position + Vector3.up * 0.25f, 80f, 25))
         {
-            if (currentBehaviourStateIndex != 0)
+            if (currentBehaviourStateIndex == 2)
                 GameNetworkManager.Instance.localPlayerController.IncreaseFearLevelOverTime(0.8f);
         }
         
@@ -130,7 +130,7 @@ public class BigEyesEnemyAI: EnemyAI
             {
                 agent.speed = 15f;
                 openDoorSpeedMultiplier = 0.8f;
-                TargetClosestPlayer(requireLineOfSight: true, viewWidth: 120f);
+                TargetClosestPlayer(requireLineOfSight: true, viewWidth: 150f);
                 if (targetPlayer != null && PlayerIsTargetable(targetPlayer))
                 {
                     SetMovingTowardsTargetPlayer(targetPlayer);
