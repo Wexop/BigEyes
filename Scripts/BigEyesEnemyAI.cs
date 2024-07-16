@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System.Collections.Generic;
+using System.Timers;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -18,6 +19,8 @@ public class BigEyesEnemyAI: EnemyAI
     private float searchTimer = 15f;
     public bool isSleeping;
     public float aiInterval;
+
+    private List<Renderer> _renders = new List<Renderer>();
     
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int Sleep = Animator.StringToHash("Sleep");
@@ -27,9 +30,9 @@ public class BigEyesEnemyAI: EnemyAI
     {
         normalLight.SetActive(!angry);
         angryLight.SetActive(angry);
-        foreach (var o in eyes)
+        foreach (var o in _renders)
         {
-            o.GetComponent<Renderer>().material = angry ? angryMaterial : normalMaterial;
+            o.material = angry ? angryMaterial : normalMaterial;
         }
     }
 
@@ -37,6 +40,10 @@ public class BigEyesEnemyAI: EnemyAI
     {
         base.Start();
         ChangeEyesMaterial(false);
+        foreach (var o in eyes)
+        {
+            _renders.Add(o.GetComponent<Renderer>());
+        }
     }
 
     public override void Update()
@@ -165,8 +172,7 @@ public class BigEyesEnemyAI: EnemyAI
     public override void OnCollideWithPlayer(Collider other)
     {
         if(isSleeping) return;
-        if(other.GetComponent<PlayerControllerB>() == GameNetworkManager.Instance.localPlayerController )
-        GameNetworkManager.Instance.localPlayerController.KillPlayer(Vector3.forward);
+        MeetsStandardPlayerCollisionConditions(other).KillPlayer(Vector3.forward * 3f);
         PlayAnimationOfCurrentState();
     }
 }
