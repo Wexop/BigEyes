@@ -1,5 +1,11 @@
 # Changelog
 
+### v1.0.2
+
+- Fix scan node
+- BigEyes now fear player
+- better vision to detect player, some attack behavior change to have a better gameplay
+
 ### v1.0.1
 
 - Clean some parts of the code

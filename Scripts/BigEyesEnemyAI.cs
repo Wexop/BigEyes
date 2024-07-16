@@ -142,8 +142,8 @@ public class BigEyesEnemyAI: EnemyAI
                 if (attackPlayerTimer <= 0)
                 {
                     TargetClosestPlayer(requireLineOfSight: true, viewWidth: 150f);
-                    attackPlayerTimer = 3f;
-                    searchTimer += 3f;
+                    attackPlayerTimer = 2f;
+                    searchTimer += 2f;
                 }
                 if (targetPlayer != null && PlayerIsTargetable(targetPlayer))
                 {
