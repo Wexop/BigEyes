@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -8,36 +9,35 @@ namespace BigEyes.Scripts;
 
 public class BigEyesEnemyAI: EnemyAI
 {
-    public Material normalMaterial;
-    public Material angryMaterial;
+    public Color normalEmissive;
+    public Color angryEmissive;
 
     public AudioClip wakeUpSound;
     public AudioClip angrySound;
 
-    public GameObject[] eyes;
+    public GameObject eyesBody;
     public GameObject normalLight;
     public GameObject angryLight;
 
     private float sleepingTimer = 15f;
     private float searchTimer = 15f;
     private float attackPlayerTimer = 2f;
+    private float wakeUpTimer = 2f;
     public bool isSleeping;
     public float aiInterval;
 
-    private List<Renderer> _renders = new List<Renderer>();
+    private Renderer _render;
     
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int Sleep = Animator.StringToHash("Sleep");
     public int lastBehaviorState;
+    private static readonly int DamagePlayer = Animator.StringToHash("DamagePlayer");
 
     public void ChangeEyesMaterial(bool angry)
     {
         normalLight.SetActive(!angry);
         angryLight.SetActive(angry);
-        foreach (var o in _renders)
-        {
-            o.material = angry ? angryMaterial : normalMaterial;
-        }
+        if(_render != null) _render.material.SetColor("_EmissiveColor", angry ? angryEmissive : normalEmissive);
     }
 
     public override void Start()
@@ -45,9 +45,12 @@ public class BigEyesEnemyAI: EnemyAI
         base.Start();
         ChangeEyesMaterial(false);
         SetAnimation();
-        foreach (var o in eyes)
+
+        List<Renderer> renderers = eyesBody.GetComponents<Renderer>().ToList();
+        
+        foreach (var r in renderers)
         {
-            _renders.Add(o.GetComponent<Renderer>());
+            if (r.material.name.Contains("UvTestBigEye")) _render = r;
         }
 
         agent.angularSpeed = 400f;
@@ -58,6 +61,7 @@ public class BigEyesEnemyAI: EnemyAI
         
         base.Update();
         aiInterval -= Time.deltaTime;
+        wakeUpTimer -= Time.deltaTime;
         if(isSleeping)sleepingTimer -= Time.deltaTime;
         else searchTimer -= Time.deltaTime;
         
@@ -101,6 +105,7 @@ public class BigEyesEnemyAI: EnemyAI
                 {
                     isSleeping = false;
                     sleepingTimer = Random.Range(10f, 25f);
+                    wakeUpTimer = 2f;
                     SwitchToBehaviourClientRpc(1);
                 }
                 break;
@@ -111,10 +116,15 @@ public class BigEyesEnemyAI: EnemyAI
                 agent.acceleration = 10f;
                 TargetClosestPlayer(requireLineOfSight: true);
                 openDoorSpeedMultiplier = 1.5f;
+
                 if (searchTimer <= 0)
                 {
                     searchTimer = Random.Range(10f, 20f);
                     SwitchToBehaviourClientRpc(0);
+                }
+                if (wakeUpTimer > 0)
+                {
+                    break;
                 }
                 
                 if (targetPlayer == null)
@@ -196,6 +206,7 @@ public class BigEyesEnemyAI: EnemyAI
     public override void OnCollideWithPlayer(Collider other)
     {
         if(isSleeping) return;
+        creatureAnimator.SetTrigger(DamagePlayer);
         var player = MeetsStandardPlayerCollisionConditions(other, false, true);
         if (player != null)
         {
