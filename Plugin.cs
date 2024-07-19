@@ -4,6 +4,7 @@ using HarmonyLib;
 using System.IO;
 using System.Reflection;
 using BepInEx.Configuration;
+using BigEyes.Utils;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
@@ -23,7 +24,7 @@ using LethalLib.Modules;
 
         public static Plugin instance;
 
-        public ConfigEntry<int> chanceSpawnEntry;
+        public ConfigEntry<string> spawnMoonRarity;
 
         void Awake()
         {
@@ -36,8 +37,10 @@ using LethalLib.Modules;
             
             Logger.LogInfo($"BigEyes bundle found !");
             
-            chanceSpawnEntry = Config.Bind("General", "SpawnChance", 20, "Chance for big eyes to spawn. You need to restart the game.");
-            CreateIntConfig(chanceSpawnEntry);
+            spawnMoonRarity = Config.Bind("General", "SpawnChance", 
+                "Modded:75,ExperimentationLevel:50,AssuranceLevel:50,VowLevel:75,OffenseLevel:75,MarchLevel:75,RendLevel:100,DineLevel:125,TitanLevel:150,Adamance:100,Embrion:150,Artifice:200", 
+                "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
+            CreateStringConfig(spawnMoonRarity);
 
             //bigeyes
             EnemyType bigEyes = bundle.LoadAsset<EnemyType>("Assets/LethalCompany/Mods/BigEyes/BigEyes.asset");
@@ -46,9 +49,15 @@ using LethalLib.Modules;
             NetworkPrefabs.RegisterNetworkPrefab(bigEyes.enemyPrefab);
             Utilities.FixMixerGroups(bigEyes.enemyPrefab);
 
-            var dic = new Dictionary<Levels.LevelTypes, int>();
-            dic.Add(Levels.LevelTypes.All, chanceSpawnEntry.Value);
-            Enemies.RegisterEnemy(bigEyes, Enemies.SpawnType.Default, dic);
+            TerminalNode terminalNodeBigEyes = new TerminalNode();
+            terminalNodeBigEyes.creatureName = "BigEyes";
+            terminalNodeBigEyes.displayText = "Don't wake him, or he will be very angry...";
+
+            TerminalKeyword terminalKeywordBigEyes = new TerminalKeyword();
+            terminalKeywordBigEyes.word = "BigEyes";
+            
+            
+            RegisterUtil.RegisterEnemyWithConfig(spawnMoonRarity.Value, bigEyes,terminalNodeBigEyes , terminalKeywordBigEyes, bigEyes.PowerLevel, bigEyes.MaxCount);
 
 
             
@@ -73,6 +82,15 @@ using LethalLib.Modules;
                 Min = min,
                 Max = max,
                 RequiresRestart = false
+            });
+            LethalConfigManager.AddConfigItem(exampleSlider);
+        }
+        
+        private void CreateStringConfig(ConfigEntry<string> configEntry)
+        {
+            var exampleSlider = new TextInputFieldConfigItem(configEntry, new TextInputFieldOptions()
+            {
+                RequiresRestart = true
             });
             LethalConfigManager.AddConfigItem(exampleSlider);
         }
