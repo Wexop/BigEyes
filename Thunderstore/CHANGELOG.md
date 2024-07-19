@@ -1,5 +1,10 @@
 # Changelog
 
+### v1.1.1
+
+- Fix model texture
+- Change spawn control config
+
 ### v1.1.0
 
 - New enemy model design, animations... More fear :) -> made by [QWERTYrodrigo](https://www.youtube.com/watch?v=eD1mFxvIL5w) -

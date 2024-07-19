@@ -9,9 +9,6 @@ namespace BigEyes.Scripts;
 
 public class BigEyesEnemyAI: EnemyAI
 {
-    public Color normalEmissive;
-    public Color angryEmissive;
-
     public AudioClip wakeUpSound;
     public AudioClip angrySound;
 
@@ -27,6 +24,8 @@ public class BigEyesEnemyAI: EnemyAI
     public float aiInterval;
 
     private Renderer _render;
+    public Material normalMaterial;
+    public Material angryMaterial;
     
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int Sleep = Animator.StringToHash("Sleep");
@@ -37,7 +36,10 @@ public class BigEyesEnemyAI: EnemyAI
     {
         normalLight.SetActive(!angry);
         angryLight.SetActive(angry);
-        if(_render != null) _render.material.SetColor("_EmissiveColor", angry ? angryEmissive : normalEmissive);
+        if(_render != null)
+        {
+            _render.material = angry ? angryMaterial : normalMaterial;
+        }
     }
 
     public override void Start()
@@ -50,7 +52,8 @@ public class BigEyesEnemyAI: EnemyAI
         
         foreach (var r in renderers)
         {
-            if (r.material.name.Contains("UvTestBigEye")) _render = r;
+            if (r.material.name.Contains("BigEyeNormalText")) _render = r;
+
         }
 
         agent.angularSpeed = 400f;
