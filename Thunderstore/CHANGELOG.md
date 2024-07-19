@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.1.2
+
+- Texture fix
+
 ### v1.1.11
 
 - small fix

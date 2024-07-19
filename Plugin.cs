@@ -20,7 +20,7 @@ using LethalLib.Modules;
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
-        const string VERSION = "1.1.11";
+        const string VERSION = "1.1.2";
 
         public static Plugin instance;
 
