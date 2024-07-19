@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.1.11
+
+- small fix
+
 ### v1.1.1
 
 - Fix model texture
