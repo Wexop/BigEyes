@@ -20,11 +20,12 @@ using LethalLib.Modules;
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
-        const string VERSION = "1.2.1";
+        const string VERSION = "1.3.0";
 
         public static BigEyesPlugin instance;
 
         public ConfigEntry<string> spawnMoonRarity;
+        public ConfigEntry<string> scrapMoonRarity;
         
         public ConfigEntry<float> minSleepTimeEntry;
         public ConfigEntry<float> maxSleepTimeEntry;
@@ -61,6 +62,7 @@ using LethalLib.Modules;
             
             LoadConfigs();
             RegisterMonster(bundle);
+            RegisterScrap(bundle);
             
             
             Logger.LogInfo($"BigEyes is ready!");
@@ -68,10 +70,17 @@ using LethalLib.Modules;
 
         void LoadConfigs()
         {
+            
+            //GENERAL
             spawnMoonRarity = Config.Bind("General", "SpawnRarity", 
                 "Modded:75,ExperimentationLevel:40,AssuranceLevel:40,VowLevel:40,OffenseLevel:50,MarchLevel:50,RendLevel:75,DineLevel:75,TitanLevel:100,Adamance:80,Embrion:120,Artifice:120", 
                 "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
             CreateStringConfig(spawnMoonRarity, true);
+            
+            scrapMoonRarity = Config.Bind("General", "ScrapSpawnRarity", 
+                "Modded:100,ExperimentationLevel:40,AssuranceLevel:40,VowLevel:40,OffenseLevel:50,MarchLevel:50,RendLevel:75,DineLevel:75,TitanLevel:100,Adamance:80,Embrion:120,Artifice:120", 
+                "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
+            CreateStringConfig(scrapMoonRarity, true);
             
             //MONSTER BEHAVIOR CONFIGS
             
@@ -165,6 +174,20 @@ using LethalLib.Modules;
             
             
             RegisterUtil.RegisterEnemyWithConfig(spawnMoonRarity.Value, bigEyes,terminalNodeBigEyes , terminalKeywordBigEyes, bigEyes.PowerLevel, bigEyes.MaxCount);
+
+        }
+        
+        void RegisterScrap(AssetBundle bundle)
+        {
+            //smalleyes
+            Item smallEyes = bundle.LoadAsset<Item>("Assets/LethalCompany/Mods/BigEyes/SmallEyesItem.asset");
+            Logger.LogInfo($"{smallEyes.name} FOUND");
+            Logger.LogInfo($"{smallEyes.spawnPrefab} prefab");
+            NetworkPrefabs.RegisterNetworkPrefab(smallEyes.spawnPrefab);
+            Utilities.FixMixerGroups(smallEyes.spawnPrefab);
+
+
+            RegisterUtil.RegisterScrapWithConfig(scrapMoonRarity.Value, smallEyes ); 
 
         }
         
