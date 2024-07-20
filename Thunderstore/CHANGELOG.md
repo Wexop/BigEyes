@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.2.1
+
+- Add a lot of configs for BigEyes behavior.
+
 ### v1.2.0
 
 - Texture fix
