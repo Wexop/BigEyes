@@ -15,6 +15,28 @@ public class BigEyesEnemyAI: EnemyAI
     public GameObject eyesBody;
     public GameObject normalLight;
     public GameObject angryLight;
+    
+    //CONFIGS
+    private float minSleepTime = 10f;
+    private float maxSleepTime = 25f;
+    
+    private float minSearchTime = 10f;
+    private float maxSearchTime = 20f;
+
+    private float wakeUpTime = 2f;
+    
+    private float visionWidth = 150f;
+
+    private float searchSpeed = 5f;
+    private float angrySpeed = 10f;
+    private float normalAcceleration = 10f;
+    private float angryAcceleration = 13f;
+    private float angularSpeed = 400f;
+
+    private float chaseTime = 4f;
+
+    private float openDoorMutliplierNormal = 1.5f;
+    private float openDoorMutliplierAngry = 0.8f;
 
     private float sleepingTimer = 15f;
     private float searchTimer = 15f;
@@ -42,11 +64,35 @@ public class BigEyesEnemyAI: EnemyAI
         }
     }
 
+    public void SetConfigs()
+    {
+     minSleepTime = BigEyesPlugin.instance.minSleepTimeEntry.Value;
+     maxSleepTime = BigEyesPlugin.instance.maxSleepTimeEntry.Value;
+    
+     minSearchTime = BigEyesPlugin.instance.minSearchTimeEntry.Value;
+     maxSearchTime = BigEyesPlugin.instance.maxSearchTimeEntry.Value;
+     wakeUpTime = BigEyesPlugin.instance.wakeUpTimeEntry.Value;
+     
+     visionWidth = BigEyesPlugin.instance.visionWidthEntry.Value;
+     searchSpeed = BigEyesPlugin.instance.searchSpeedEntry.Value;
+     angrySpeed = BigEyesPlugin.instance.angrySpeedEntry.Value;
+     
+     normalAcceleration = BigEyesPlugin.instance.normalAccelerationEntry.Value;
+     angryAcceleration = BigEyesPlugin.instance.angryAccelerationEntry.Value;
+     angularSpeed = BigEyesPlugin.instance.angularSpeedEntry.Value;
+
+     chaseTime = BigEyesPlugin.instance.chaseTime.Value;
+
+     openDoorMutliplierNormal = BigEyesPlugin.instance.openDoorMutliplierNormalEntry.Value;
+     openDoorMutliplierAngry = BigEyesPlugin.instance.openDoorMutliplierAngryEntry.Value;
+    }
+
     public override void Start()
     {
         base.Start();
         ChangeEyesMaterial(false);
         SetAnimation();
+        SetConfigs();
 
         List<Renderer> renderers = eyesBody.GetComponents<Renderer>().ToList();
         
@@ -56,7 +102,7 @@ public class BigEyesEnemyAI: EnemyAI
 
         }
 
-        agent.angularSpeed = 400f;
+        agent.angularSpeed = angularSpeed;
     }
 
     public override void Update()
@@ -79,7 +125,7 @@ public class BigEyesEnemyAI: EnemyAI
 
         }
         
-        if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position + Vector3.up * 0.25f, 100f, 25))
+        if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position + Vector3.up * 0.25f, 100f, 60))
         {
             if (currentBehaviourStateIndex == 2)
                 GameNetworkManager.Instance.localPlayerController.JumpToFearLevel(0.8f);
@@ -107,22 +153,22 @@ public class BigEyesEnemyAI: EnemyAI
                 if (sleepingTimer <= 0)
                 {
                     isSleeping = false;
-                    sleepingTimer = Random.Range(10f, 25f);
-                    wakeUpTimer = 2f;
+                    sleepingTimer = Random.Range(minSleepTime, maxSleepTime);
+                    wakeUpTimer = wakeUpTime;
                     SwitchToBehaviourClientRpc(1);
                 }
                 break;
             }
             case 1:
             {
-                agent.speed = 5f;
-                agent.acceleration = 10f;
-                TargetClosestPlayer(requireLineOfSight: true);
-                openDoorSpeedMultiplier = 1.5f;
+                agent.speed = searchSpeed;
+                agent.acceleration = normalAcceleration;
+                TargetClosestPlayer(requireLineOfSight: true, viewWidth: visionWidth);
+                openDoorSpeedMultiplier = openDoorMutliplierNormal;
 
                 if (searchTimer <= 0)
                 {
-                    searchTimer = Random.Range(10f, 20f);
+                    searchTimer = Random.Range(minSearchTime, maxSearchTime);
                     SwitchToBehaviourClientRpc(0);
                 }
                 if (wakeUpTimer > 0)
@@ -139,7 +185,7 @@ public class BigEyesEnemyAI: EnemyAI
                     StartSearch(ChooseFarthestNodeFromPosition(transform.position, true).position, aiSearchRoutine);
                 }else if (PlayerIsTargetable(targetPlayer))
                 {
-                    attackPlayerTimer = 4f;
+                    attackPlayerTimer = chaseTime;
                     searchTimer += 3f;
                     StopSearch(currentSearch);
                     SwitchToBehaviourClientRpc(2);
@@ -149,13 +195,13 @@ public class BigEyesEnemyAI: EnemyAI
             }
             case 2:
             {
-                agent.speed = 10f;
-                agent.acceleration = 13f;
-                openDoorSpeedMultiplier = 0.8f;
+                agent.speed = angrySpeed;
+                agent.acceleration = angryAcceleration;
+                openDoorSpeedMultiplier = openDoorMutliplierAngry;
                 if (attackPlayerTimer <= 0)
                 {
-                    TargetClosestPlayer(requireLineOfSight: true, viewWidth: 150f);
-                    attackPlayerTimer = 2f;
+                    TargetClosestPlayer(requireLineOfSight: true, viewWidth: visionWidth);
+                    attackPlayerTimer = chaseTime / 2;
                     searchTimer += 2f;
                 }
                 if (targetPlayer != null && PlayerIsTargetable(targetPlayer))

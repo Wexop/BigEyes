@@ -15,16 +15,38 @@ using LethalLib.Modules;
 {
     [BepInPlugin(GUID, NAME, VERSION)]
     [BepInDependency("evaisa.lethallib", "0.15.1")]
-    public class Plugin : BaseUnityPlugin
+    public class BigEyesPlugin : BaseUnityPlugin
     {
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
         const string VERSION = "1.2.0";
 
-        public static Plugin instance;
+        public static BigEyesPlugin instance;
 
         public ConfigEntry<string> spawnMoonRarity;
+        
+        public ConfigEntry<float> minSleepTimeEntry;
+        public ConfigEntry<float> maxSleepTimeEntry;
+        
+        public ConfigEntry<float> minSearchTimeEntry;
+        public ConfigEntry<float> maxSearchTimeEntry;
+        
+        public ConfigEntry<float> wakeUpTimeEntry;
+        public ConfigEntry<float> visionWidthEntry;
+        
+        public ConfigEntry<float> searchSpeedEntry;
+        public ConfigEntry<float> angrySpeedEntry;
+        
+        public ConfigEntry<float> normalAccelerationEntry;
+        public ConfigEntry<float> angryAccelerationEntry;
+        
+        public ConfigEntry<float> angularSpeedEntry;
+        
+        public ConfigEntry<float> chaseTime;
+        
+        public ConfigEntry<float> openDoorMutliplierNormalEntry;
+        public ConfigEntry<float> openDoorMutliplierAngryEntry;
 
         void Awake()
         {
@@ -49,7 +71,80 @@ using LethalLib.Modules;
             spawnMoonRarity = Config.Bind("General", "SpawnRarity", 
                 "Modded:75,ExperimentationLevel:50,AssuranceLevel:50,VowLevel:75,OffenseLevel:75,MarchLevel:75,RendLevel:100,DineLevel:125,TitanLevel:150,Adamance:100,Embrion:150,Artifice:200", 
                 "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
-            CreateStringConfig(spawnMoonRarity);
+            CreateStringConfig(spawnMoonRarity, true);
+            
+            //MONSTER BEHAVIOR CONFIGS
+            
+            minSleepTimeEntry = Config.Bind("Custom Behavior", "minSleepDuration", 
+                10f, 
+                "BigEyes min sleep phase duration. You don't need to restart the game !");
+            CreateFloatConfig(minSleepTimeEntry);
+            
+            maxSleepTimeEntry = Config.Bind("Custom Behavior", "maxSleepDuration", 
+                25f, 
+                "BigEyes max sleep phase duration. You don't need to restart the game !");
+            CreateFloatConfig(maxSleepTimeEntry);
+            
+            minSearchTimeEntry = Config.Bind("Custom Behavior", "minSearchDuration", 
+                10f, 
+                "BigEyes min search phase duration. You don't need to restart the game !");
+            CreateFloatConfig(minSearchTimeEntry);
+            
+            maxSearchTimeEntry = Config.Bind("Custom Behavior", "maxSearchDuration", 
+                25f, 
+                "BigEyes max search phase duration. You don't need to restart the game !");
+            CreateFloatConfig(maxSearchTimeEntry);
+            
+            wakeUpTimeEntry = Config.Bind("Custom Behavior", "wakeUpDuration", 
+                2f, 
+                "BigEyes wake up duration, where he can't detect any player. You don't need to restart the game !");
+            CreateFloatConfig(wakeUpTimeEntry);
+            
+            visionWidthEntry = Config.Bind("Custom Behavior", "visionWidth", 
+                150f, 
+                "BigEyes vision with. You don't need to restart the game !");
+            CreateFloatConfig(visionWidthEntry, 1f, 500f);
+            
+            searchSpeedEntry = Config.Bind("Custom Behavior", "searchSpeed", 
+                5f, 
+                "BigEyes speed on search phase. See NavMeshAgent from Unity for more infos. You don't need to restart the game !");
+            CreateFloatConfig(searchSpeedEntry);
+            
+            angrySpeedEntry = Config.Bind("Custom Behavior", "angrySpeed", 
+                10f, 
+                "BigEyes speed on angry phase. See NavMeshAgent from Unity for more infos. You don't need to restart the game !");
+            CreateFloatConfig(angrySpeedEntry);
+            
+            normalAccelerationEntry = Config.Bind("Custom Behavior", "normalAcceleration", 
+                10f, 
+                "BigEyes acceleration on angry phase. See NavMeshAgent from Unity for more infos. You don't need to restart the game !");
+            CreateFloatConfig(normalAccelerationEntry);
+            
+            angryAccelerationEntry = Config.Bind("Custom Behavior", "angryAcceleration", 
+                13f, 
+                "BigEyes acceleration on angry phase. See NavMeshAgent from Unity for more infos. You don't need to restart the game !");
+            CreateFloatConfig(angryAccelerationEntry);
+            
+            angularSpeedEntry = Config.Bind("Custom Behavior", "angularSpeed", 
+                400f, 
+                "BigEyes angularSpeed. See NavMeshAgent from Unity for more infos. You don't need to restart the game !");
+            CreateFloatConfig(angularSpeedEntry, 1f, 1500f);
+            
+            chaseTime = Config.Bind("Custom Behavior", "chaseDuration", 
+                4f, 
+                "BigEyes chase duration when he detect a player. You don't need to restart the game !");
+            CreateFloatConfig(chaseTime);
+            
+            openDoorMutliplierNormalEntry = Config.Bind("Custom Behavior", "openDoorMultiplierNormal", 
+                1.5f, 
+                "BigEyes open door multiplier on search phase. You don't need to restart the game !");
+            CreateFloatConfig(openDoorMutliplierNormalEntry);
+            
+            openDoorMutliplierAngryEntry = Config.Bind("Custom Behavior", "openDoorMultiplierAngry", 
+                0.8f, 
+                "BigEyes open door multiplier on angry phase. You don't need to restart the game !");
+            CreateFloatConfig(openDoorMutliplierAngryEntry);
+            
         }
 
         void RegisterMonster(AssetBundle bundle)
@@ -95,11 +190,11 @@ using LethalLib.Modules;
             LethalConfigManager.AddConfigItem(exampleSlider);
         }
         
-        private void CreateStringConfig(ConfigEntry<string> configEntry)
+        private void CreateStringConfig(ConfigEntry<string> configEntry, bool requireRestart = false)
         {
             var exampleSlider = new TextInputFieldConfigItem(configEntry, new TextInputFieldOptions()
             {
-                RequiresRestart = true
+                RequiresRestart = requireRestart
             });
             LethalConfigManager.AddConfigItem(exampleSlider);
         }
