@@ -69,7 +69,7 @@ using LethalLib.Modules;
         void LoadConfigs()
         {
             spawnMoonRarity = Config.Bind("General", "SpawnRarity", 
-                "Modded:75,ExperimentationLevel:50,AssuranceLevel:50,VowLevel:75,OffenseLevel:75,MarchLevel:75,RendLevel:100,DineLevel:125,TitanLevel:150,Adamance:100,Embrion:150,Artifice:200", 
+                "Modded:75,ExperimentationLevel:40,AssuranceLevel:40,VowLevel:40,OffenseLevel:50,MarchLevel:50,RendLevel:75,DineLevel:75,TitanLevel:100,Adamance:80,Embrion:120,Artifice:120", 
                 "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
             CreateStringConfig(spawnMoonRarity, true);
             
@@ -101,7 +101,7 @@ using LethalLib.Modules;
             CreateFloatConfig(wakeUpTimeEntry);
             
             visionWidthEntry = Config.Bind("Custom Behavior", "visionWidth", 
-                150f, 
+                100f, 
                 "BigEyes vision with. You don't need to restart the game !");
             CreateFloatConfig(visionWidthEntry, 1f, 500f);
             
