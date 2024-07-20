@@ -3,6 +3,7 @@
 ### v1.2.1
 
 - Add a lot of configs for BigEyes behavior.
+- Add a new scrap item with the old BigEyes model, to remember where the mod come from :) You can use it like an air horn !
 
 ### v1.2.0
 
