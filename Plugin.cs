@@ -37,11 +37,23 @@ using LethalLib.Modules;
             
             Logger.LogInfo($"BigEyes bundle found !");
             
+            LoadConfigs();
+            RegisterMonster(bundle);
+            
+            
+            Logger.LogInfo($"BigEyes is ready!");
+        }
+
+        void LoadConfigs()
+        {
             spawnMoonRarity = Config.Bind("General", "SpawnRarity", 
                 "Modded:75,ExperimentationLevel:50,AssuranceLevel:50,VowLevel:75,OffenseLevel:75,MarchLevel:75,RendLevel:100,DineLevel:125,TitanLevel:150,Adamance:100,Embrion:150,Artifice:200", 
                 "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
             CreateStringConfig(spawnMoonRarity);
+        }
 
+        void RegisterMonster(AssetBundle bundle)
+        {
             //bigeyes
             EnemyType bigEyes = bundle.LoadAsset<EnemyType>("Assets/LethalCompany/Mods/BigEyes/BigEyes.asset");
             Logger.LogInfo($"{bigEyes.name} FOUND");
@@ -59,9 +71,6 @@ using LethalLib.Modules;
             
             RegisterUtil.RegisterEnemyWithConfig(spawnMoonRarity.Value, bigEyes,terminalNodeBigEyes , terminalKeywordBigEyes, bigEyes.PowerLevel, bigEyes.MaxCount);
 
-
-            
-            Logger.LogInfo($"BigEyes is ready!");
         }
         
         private void CreateFloatConfig(ConfigEntry<float> configEntry, float min = 0f, float max = 100f)
