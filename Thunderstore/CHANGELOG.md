@@ -1,5 +1,10 @@
 # Changelog
 
+### v1.3.1
+
+- Add a volume config for the small eyes scrap item
+- Add compatibility with [SellMyScrap](https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/), Add a new BigEyes Scrap Eater 👀
+
 ### v1.3.0
 
 - Add a lot of configs for BigEyes behavior.

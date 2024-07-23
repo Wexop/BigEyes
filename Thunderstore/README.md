@@ -15,3 +15,7 @@ Many thanks to
 [Siphonife](https://www.artstation.com/siphonife) - 
 [Solidstone](https://ko-fi.com/solidstonee)
 who generously made the model of the monster and the animations, go check their works !
+
+## Compatibility
+
+- [SellMyScrap](https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/) - Add new BigEyes Scrap Eater 👀

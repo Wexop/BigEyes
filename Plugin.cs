@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using BepInEx;
-using HarmonyLib;
+﻿using BepInEx;
 using System.IO;
 using System.Reflection;
 using BepInEx.Bootstrap;
@@ -18,6 +16,7 @@ using LethalLib.Modules;
 {
     [BepInPlugin(GUID, NAME, VERSION)]
     [BepInDependency("evaisa.lethallib", "0.15.1")]
+    [BepInDependency("com.github.zehsteam.SellMyScrap",BepInDependency.DependencyFlags.SoftDependency) ]
     public class BigEyesPlugin : BaseUnityPlugin
     {
 
@@ -97,7 +96,7 @@ using LethalLib.Modules;
             GameObject BigEyesScrapEater = bundle.LoadAsset<GameObject>("Assets/LethalCompany/Mods/BigEyes/BigEyesScrapEaterPrefab.prefab");
             Debug.Log($"{BigEyesScrapEater.name} FOUND");
             ScrapEaterManager.AddScrapEater(BigEyesScrapEater, () => scrapEaterWeight.Value);
-            ConfigHelper.AddScrapEaterConfigItem("bigEyesScrapEater",
+            ConfigHelper.AddScrapEaterConfigItem("BigEyesScrapEater",
                 (value) =>
                 {
                     scrapEaterWeight.Value = int.Parse(value);
@@ -116,7 +115,7 @@ using LethalLib.Modules;
             CreateStringConfig(spawnMoonRarity, true);
             
             scrapMoonRarity = Config.Bind("General", "ScrapSpawnRarity", 
-                "Modded:100,ExperimentationLevel:40,AssuranceLevel:40,VowLevel:40,OffenseLevel:50,MarchLevel:50,RendLevel:75,DineLevel:75,TitanLevel:100,Adamance:80,Embrion:120,Artifice:120", 
+                "Modded:15,ExperimentationLevel:10,AssuranceLevel:10,VowLevel:15,OffenseLevel:15,MarchLevel:15,RendLevel:20,DineLevel:20,TitanLevel:20,Adamance:20,Embrion:30,Artifice:30", 
                 "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
             CreateStringConfig(scrapMoonRarity, true);
             
