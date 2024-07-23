@@ -23,7 +23,7 @@ using LethalLib.Modules;
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
-        const string VERSION = "1.3.0";
+        const string VERSION = "1.3.1";
 
         public bool isSellMyScrapIsHere;
         public static string SellMyScrapReferenceChain = "com.github.zehsteam.SellMyScrap";
@@ -32,6 +32,8 @@ using LethalLib.Modules;
 
         public ConfigEntry<string> spawnMoonRarity;
         public ConfigEntry<string> scrapMoonRarity;
+
+        public ConfigEntry<float> smallEyesScrapVolume;
         
         public ConfigEntry<float> minSleepTimeEntry;
         public ConfigEntry<float> maxSleepTimeEntry;
@@ -86,7 +88,7 @@ using LethalLib.Modules;
         void LoadScrapEater(AssetBundle bundle)
         {
             
-            scrapEaterWeight = Config.Bind("Custom Behavior", "bigEyesScrapEaterWeight", 
+            scrapEaterWeight = Config.Bind("SellMyScrap", "bigEyesScrapEaterWeight", 
                 1, 
                 "BigEyes scrap eater weight");
             CreateIntConfig(scrapEaterWeight);
@@ -117,6 +119,10 @@ using LethalLib.Modules;
                 "Modded:100,ExperimentationLevel:40,AssuranceLevel:40,VowLevel:40,OffenseLevel:50,MarchLevel:50,RendLevel:75,DineLevel:75,TitanLevel:100,Adamance:80,Embrion:120,Artifice:120", 
                 "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
             CreateStringConfig(scrapMoonRarity, true);
+            
+            smallEyesScrapVolume = Config.Bind("General", "smallEyesScrapVolume", 0.7f,
+                "SmallEyes scrap item sound volume. You need to restart the game.");
+            CreateFloatConfig(smallEyesScrapVolume, 0f, 1f);
             
             //MONSTER BEHAVIOR CONFIGS
             
