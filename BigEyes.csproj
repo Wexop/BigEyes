@@ -25,6 +25,9 @@
       <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>D:\SteamLibrary\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
       </Reference>
+      <Reference Include="com.github.zehsteam.SellMyScrap">
+        <HintPath>..\DEPENDENCES\SELLMYSCRAP\com.github.zehsteam.SellMyScrap.dll</HintPath>
+      </Reference>
       <Reference Include="LethalConfig">
         <HintPath>..\DEPENDENCES\LETHALCONFIG\plugins\LethalConfig\LethalConfig.dll</HintPath>
       </Reference>

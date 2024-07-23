@@ -3,8 +3,11 @@ using BepInEx;
 using HarmonyLib;
 using System.IO;
 using System.Reflection;
+using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BigEyes.Utils;
+using com.github.zehsteam.SellMyScrap;
+using com.github.zehsteam.SellMyScrap.ScrapEaters;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
@@ -21,6 +24,9 @@ using LethalLib.Modules;
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
         const string VERSION = "1.3.0";
+
+        public bool isSellMyScrapIsHere;
+        public static string SellMyScrapReferenceChain = "com.github.zehsteam.SellMyScrap";
 
         public static BigEyesPlugin instance;
 
@@ -49,6 +55,8 @@ using LethalLib.Modules;
         public ConfigEntry<float> openDoorMutliplierNormalEntry;
         public ConfigEntry<float> openDoorMutliplierAngryEntry;
 
+        public ConfigEntry<int> scrapEaterWeight;
+
         void Awake()
         {
             instance = this;
@@ -64,8 +72,36 @@ using LethalLib.Modules;
             RegisterMonster(bundle);
             RegisterScrap(bundle);
             
+            if (Chainloader.PluginInfos.ContainsKey(SellMyScrapReferenceChain))
+            {
+                Debug.Log("SellMyScrap found !");
+                isSellMyScrapIsHere = true;
+                LoadScrapEater(bundle);
+            }
+            
             
             Logger.LogInfo($"BigEyes is ready!");
+        }
+
+        void LoadScrapEater(AssetBundle bundle)
+        {
+            
+            scrapEaterWeight = Config.Bind("Custom Behavior", "bigEyesScrapEaterWeight", 
+                1, 
+                "BigEyes scrap eater weight");
+            CreateIntConfig(scrapEaterWeight);
+            
+            
+            GameObject BigEyesScrapEater = bundle.LoadAsset<GameObject>("Assets/LethalCompany/Mods/BigEyes/BigEyesScrapEaterPrefab.prefab");
+            Debug.Log($"{BigEyesScrapEater.name} FOUND");
+            ScrapEaterManager.AddScrapEater(BigEyesScrapEater, () => scrapEaterWeight.Value);
+            ConfigHelper.AddScrapEaterConfigItem("bigEyesScrapEater",
+                (value) =>
+                {
+                    scrapEaterWeight.Value = int.Parse(value);
+                }, () => scrapEaterWeight.Value.ToString()
+                );
+
         }
 
         void LoadConfigs()
