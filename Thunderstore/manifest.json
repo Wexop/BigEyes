@@ -1,6 +1,6 @@
 {
   "name": "BigEyes",
-  "version_number": "1.3.1",
+  "version_number": "1.3.2",
   "website_url": "https://github.com/Wexop/BigEyes",
   "description": "[V50+] Add a new monster to the game, be careful if he is awake... Configurable !",
   "dependencies": [

@@ -2,7 +2,7 @@
 
 Add a new monster to the game. Don't look if he's awake...
 
-You want to custom the enemy behavior ? There are a lot of configs for that, check it !
+You want to custom the enemy behavior ? There are a lot of configs for that, check it ! **Make sure that every player have the same configs.**
 
 Also add a scrap item that is the first model version of BigEyes, you can use it like an air horn to have the old angry animation !
 

@@ -1,5 +1,11 @@
 # Changelog
 
+### v1.3.2
+
+- Fix an issue where SmallEyes item could be scan while grabbed
+- Better sync behavior between players
+- Update default spawn rarity. If you want this new default config, make sure to reset it and restart your game.
+
 ### v1.3.1
 
 - Add a volume config for the small eyes scrap item

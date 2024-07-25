@@ -111,7 +111,7 @@ public class BigEyesEnemyAI: EnemyAI
         base.Update();
         aiInterval -= Time.deltaTime;
         wakeUpTimer -= Time.deltaTime;
-        if(isSleeping)sleepingTimer -= Time.deltaTime;
+        if(isSleeping) sleepingTimer -= Time.deltaTime;
         else searchTimer -= Time.deltaTime;
         
         attackPlayerTimer -= Time.deltaTime;
@@ -155,7 +155,7 @@ public class BigEyesEnemyAI: EnemyAI
                     isSleeping = false;
                     sleepingTimer = Random.Range(minSleepTime, maxSleepTime);
                     wakeUpTimer = wakeUpTime;
-                    SwitchToBehaviourClientRpc(1);
+                    SwitchToBehaviourState(1);
                 }
                 break;
             }
@@ -165,19 +165,20 @@ public class BigEyesEnemyAI: EnemyAI
                 agent.acceleration = normalAcceleration;
                 TargetClosestPlayer(requireLineOfSight: true, viewWidth: visionWidth);
                 openDoorSpeedMultiplier = openDoorMutliplierNormal;
-
-                if (searchTimer <= 0)
-                {
-                    searchTimer = Random.Range(minSearchTime, maxSearchTime);
-                    SwitchToBehaviourClientRpc(0);
-                }
-                if (wakeUpTimer > 0)
-                {
-                    break;
-                }
                 
                 if (targetPlayer == null)
                 {
+                    
+                    if (searchTimer <= 0)
+                    {
+                        searchTimer = Random.Range(minSearchTime, maxSearchTime);
+                        SwitchToBehaviourState(0);
+                    }
+                    if (wakeUpTimer > 0)
+                    {
+                        break;
+                    }
+                    
                     if (currentSearch.inProgress) break;
                     AISearchRoutine aiSearchRoutine = new AISearchRoutine();
                     aiSearchRoutine.searchWidth = 50f;
@@ -185,10 +186,21 @@ public class BigEyesEnemyAI: EnemyAI
                     StartSearch(ChooseFarthestNodeFromPosition(transform.position, true).position, aiSearchRoutine);
                 }else if (PlayerIsTargetable(targetPlayer))
                 {
-                    attackPlayerTimer = chaseTime;
-                    searchTimer += 3f;
-                    StopSearch(currentSearch);
-                    SwitchToBehaviourClientRpc(2);
+
+                    if ((UnityEngine.Object) targetPlayer !=
+                        (UnityEngine.Object) GameNetworkManager.Instance.localPlayerController)
+                    {
+                        ChangeOwnershipOfEnemy(targetPlayer.actualClientId);
+                    }
+                    else
+                    {
+                                            
+                        attackPlayerTimer = chaseTime;
+                        searchTimer = Mathf.Clamp(searchTimer, 0,100) + 3f;
+                        StopSearch(currentSearch);
+                        SwitchToBehaviourState(2);
+                    }
+
                 }
                 
                 break;
@@ -210,7 +222,7 @@ public class BigEyesEnemyAI: EnemyAI
                 }
                 else
                 {
-                    SwitchToBehaviourClientRpc(1);
+                    SwitchToBehaviourState(1);
                 }
                 break;
             }
@@ -228,6 +240,7 @@ public class BigEyesEnemyAI: EnemyAI
         {
             case 0:
             {
+                searchTimer = Random.Range(minSearchTime, maxSearchTime);
                 creatureVoice.clip = null ;
                 creatureAnimator.SetBool(Attack, false);
                 creatureAnimator.SetBool(Sleep, true);
@@ -235,6 +248,7 @@ public class BigEyesEnemyAI: EnemyAI
             }
             case 1:
             {
+                sleepingTimer = Random.Range(minSearchTime, maxSearchTime);
                 creatureVoice.clip = wakeUpSound ;
                 creatureVoice.Play();
                 creatureAnimator.SetBool(Attack, false);

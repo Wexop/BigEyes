@@ -22,7 +22,7 @@ using LethalLib.Modules;
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
-        const string VERSION = "1.3.1";
+        const string VERSION = "1.3.2";
 
         public bool isSellMyScrapIsHere;
         public static string SellMyScrapReferenceChain = "com.github.zehsteam.SellMyScrap";
@@ -110,7 +110,7 @@ using LethalLib.Modules;
             
             //GENERAL
             spawnMoonRarity = Config.Bind("General", "SpawnRarity", 
-                "Modded:75,ExperimentationLevel:40,AssuranceLevel:40,VowLevel:40,OffenseLevel:50,MarchLevel:50,RendLevel:75,DineLevel:75,TitanLevel:100,Adamance:80,Embrion:120,Artifice:120", 
+                "Modded:40,ExperimentationLevel:20,AssuranceLevel:20,VowLevel:20,OffenseLevel:25,MarchLevel:25,RendLevel:30,DineLevel:30,TitanLevel:50,Adamance:50,Embrion:50,Artifice:55", 
                 "Chance for big eyes to spawn for any moon, example => assurance:100,offense:50 . You need to restart the game.");
             CreateStringConfig(spawnMoonRarity, true);
             
@@ -161,7 +161,7 @@ using LethalLib.Modules;
             CreateFloatConfig(searchSpeedEntry);
             
             angrySpeedEntry = Config.Bind("Custom Behavior", "angrySpeed", 
-                10f, 
+                9f, 
                 "BigEyes speed on angry phase. See NavMeshAgent from Unity for more infos. You don't need to restart the game !");
             CreateFloatConfig(angrySpeedEntry);
             
@@ -171,7 +171,7 @@ using LethalLib.Modules;
             CreateFloatConfig(normalAccelerationEntry);
             
             angryAccelerationEntry = Config.Bind("Custom Behavior", "angryAcceleration", 
-                13f, 
+                12f, 
                 "BigEyes acceleration on angry phase. See NavMeshAgent from Unity for more infos. You don't need to restart the game !");
             CreateFloatConfig(angryAccelerationEntry);
             
