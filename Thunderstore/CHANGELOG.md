@@ -5,6 +5,7 @@
 - Fix an issue where SmallEyes item could be scan while grabbed
 - Better sync behavior between players
 - Update default spawn rarity. If you want this new default config, make sure to reset it and restart your game.
+- Update some behaviors default configs. Make sure every player have the same behavior configs to have a good sync.
 
 ### v1.3.1
 
