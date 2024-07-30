@@ -27,6 +27,8 @@ using LethalLib.Modules;
         public bool isSellMyScrapIsHere;
         public static string SellMyScrapReferenceChain = "com.github.zehsteam.SellMyScrap";
 
+        public static int shinyChance = 1;
+
         public static BigEyesPlugin instance;
 
         public ConfigEntry<string> spawnMoonRarity;
@@ -261,6 +263,11 @@ using LethalLib.Modules;
                 RequiresRestart = requireRestart
             });
             LethalConfigManager.AddConfigItem(exampleSlider);
+        }
+
+        public static bool IsShiny()
+        {
+            return Random.Range(0, 1000) < shinyChance;
         }
 
 
