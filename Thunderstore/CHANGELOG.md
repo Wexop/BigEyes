@@ -1,5 +1,10 @@
 # Changelog
 
+### v1.3.3
+
+- Fix (again) SmallEyes scan issues
+- Add a max spawn number config for BigEyes
+
 ### v1.3.2
 
 - Fix an issue where SmallEyes item could be scan while grabbed

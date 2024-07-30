@@ -22,7 +22,7 @@ using LethalLib.Modules;
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
-        const string VERSION = "1.3.2";
+        const string VERSION = "1.3.3";
 
         public bool isSellMyScrapIsHere;
         public static string SellMyScrapReferenceChain = "com.github.zehsteam.SellMyScrap";
@@ -57,6 +57,7 @@ using LethalLib.Modules;
         public ConfigEntry<float> openDoorMutliplierAngryEntry;
 
         public ConfigEntry<int> scrapEaterWeight;
+        public ConfigEntry<int> maxBigEyesSpawnNb;
 
         void Awake()
         {
@@ -124,6 +125,11 @@ using LethalLib.Modules;
             CreateFloatConfig(smallEyesScrapVolume, 0f, 1f);
             
             //MONSTER BEHAVIOR CONFIGS
+            
+            maxBigEyesSpawnNb = Config.Bind("Custom Behavior", "maxSpawnNumber", 
+                2, 
+                "BigEyes max spawn number in one moon. You don't need to restart the game !");
+            CreateIntConfig(maxBigEyesSpawnNb, 1, 20);
             
             minSleepTimeEntry = Config.Bind("Custom Behavior", "minSleepDuration", 
                 10f, 
@@ -201,6 +207,9 @@ using LethalLib.Modules;
         {
             //bigeyes
             EnemyType bigEyes = bundle.LoadAsset<EnemyType>("Assets/LethalCompany/Mods/BigEyes/BigEyes.asset");
+
+            bigEyes.MaxCount = maxBigEyesSpawnNb.Value;
+            
             Logger.LogInfo($"{bigEyes.name} FOUND");
             Logger.LogInfo($"{bigEyes.enemyPrefab} prefab");
             NetworkPrefabs.RegisterNetworkPrefab(bigEyes.enemyPrefab);
