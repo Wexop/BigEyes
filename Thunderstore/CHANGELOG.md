@@ -2,6 +2,10 @@
 
 ### v1.3.4
 
+- Small fixs
+
+### v1.3.4
+
 - Fix BigEyes for v60, note that he won't work for others versions
 
 ### v1.3.3
