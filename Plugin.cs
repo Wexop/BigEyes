@@ -4,7 +4,7 @@ using System.Reflection;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BigEyes.Utils;
-using com.github.zehsteam.SellMyScrap;
+using com.github.zehsteam.SellMyScrap.Helpers;
 using com.github.zehsteam.SellMyScrap.ScrapEaters;
 using LethalConfig;
 using LethalConfig.ConfigItems;
@@ -22,7 +22,7 @@ using LethalLib.Modules;
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
-        const string VERSION = "1.3.5";
+        const string VERSION = "1.3.6";
 
         public bool isSellMyScrapIsHere;
         public static string SellMyScrapReferenceChain = "com.github.zehsteam.SellMyScrap";
@@ -97,12 +97,12 @@ using LethalLib.Modules;
             GameObject BigEyesScrapEater = bundle.LoadAsset<GameObject>("Assets/LethalCompany/Mods/BigEyes/BigEyesScrapEaterPrefab.prefab");
             Debug.Log($"{BigEyesScrapEater.name} FOUND");
             ScrapEaterManager.AddScrapEater(BigEyesScrapEater, () => scrapEaterWeight.Value);
-            ConfigHelper.AddScrapEaterConfigItem("BigEyesScrapEater",
+           /* ConfigHelper.AddScrapEaterConfigItem("BigEyesScrapEater",
                 (value) =>
                 {
                     scrapEaterWeight.Value = int.Parse(value);
                 }, () => scrapEaterWeight.Value.ToString()
-                );
+                ); */
 
         }
 

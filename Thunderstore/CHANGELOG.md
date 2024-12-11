@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.3.6
+
+- Fix compatibility with SellMyScraps
+
 ### v1.3.5
 
 - Small fixs
