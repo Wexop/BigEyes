@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.3.7
+
+- Fix error log when player hit BigEyes
+
 ### v1.3.6
 
 - Fix compatibility with SellMyScraps
