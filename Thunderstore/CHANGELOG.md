@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.3.8
+
+- Recompile mod to be compatible with v73
+
 ### v1.3.7
 
 - Fix error log when player hit BigEyes
