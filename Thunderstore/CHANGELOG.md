@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.3.9
+
+- Recompile mod to be compatible with v81
+
 ### v1.3.8
 
 - Recompile mod to be compatible with v73
