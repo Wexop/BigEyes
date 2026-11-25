@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.3.11
+
+- Update mod README
+
 ### v1.3.10
 
 - remove "v60" of the mod title (Mod is still working xD)

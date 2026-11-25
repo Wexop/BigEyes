@@ -22,7 +22,7 @@ using LethalLib.Modules;
 
         const string GUID = "wexop.bigeyes";
         const string NAME = "BigEyes";
-        const string VERSION = "1.3.10";
+        const string VERSION = "1.3.11";
 
         public bool isSellMyScrapIsHere;
         public static string SellMyScrapReferenceChain = "com.github.zehsteam.SellMyScrap";
